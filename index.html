@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="omnitrix">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypePro — Professional Touch Typing Tutor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌨️</text></svg>">
+  
+  <!-- Google Fonts: JetBrains Mono & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/keyboard.css">
+  <link rel="stylesheet" href="css/modes.css">
+</head>
+<body id="app-root">
+
+  <!-- Hidden input for high-speed, zero-lag keystroke capture -->
+  <input type="text" id="hidden-input" class="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus>
+
+  <!-- Application Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="omnitrix-badge" id="omnitrix-badge" title="Omnitrix Core - Click to activate Hero Time!">
+        <svg class="omnitrix-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="#121814" stroke="#223024" stroke-width="4"/>
+          <circle cx="50" cy="50" r="39" fill="#040a06" stroke="#10ff50" stroke-width="2.5"/>
+          <circle cx="50" cy="8" r="3" fill="#66806a"/>
+          <circle cx="50" cy="92" r="3" fill="#66806a"/>
+          <circle cx="8" cy="50" r="3" fill="#66806a"/>
+          <circle cx="92" cy="50" r="3" fill="#66806a"/>
+          <g id="omnitrix-dial-core">
+            <polygon points="26,24 74,24 50,47" fill="#10ff50"/>
+            <polygon points="26,76 74,76 50,53" fill="#10ff50"/>
+            <polygon points="24,26 24,74 47,50" fill="#050d07"/>
+            <polygon points="76,26 76,74 53,50" fill="#050d07"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">TypePro</h1>
+      </div>
+      <span class="brand-tag">Omnitrix Edition</span>
+    </div>
+
+    <div class="header-controls">
+      <!-- Sound Switcher -->
+      <div class="control-group">
+        <label for="sound-select">🔊 Sound:</label>
+        <select id="sound-select" class="select-control">
+          <option value="omnitrix" selected>⚡ Ben 10 Omnitrix (Hero Time!)</option>
+          <option value="clicky">Cherry MX Blue (Clicky)</option>
+          <option value="thock">Gateron Black (Thock)</option>
+          <option value="typewriter">Vintage Typewriter</option>
+          <option value="pop">Modern Bubble Pop</option>
+          <option value="none">Muted</option>
+        </select>
+        <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="40" title="Volume">
+        <button id="test-sound-btn" class="icon-btn" title="Click to test active sound">▶ Test</button>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="control-group">
+        <label for="theme-select">🎨 Theme:</label>
+        <select id="theme-select" class="select-control">
+          <option value="omnitrix" selected>🟢 Ben 10 Omnitrix HUD</option>
+          <option value="cyberpunk">Cyberpunk Neon</option>
+          <option value="terminal">Matrix Terminal</option>
+          <option value="nordic">Nordic Frost</option>
+          <option value="dark">Dark Obsidian</option>
+          <option value="light">Clean Light</option>
+        </select>
+      </div>
+
+      <!-- Touch Typing Pro Guide -->
+      <button id="tips-btn" class="icon-btn" title="Touch Typing Golden Rules">
+        <span>📖</span> Pro Guide
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace Layout -->
+  <main class="app-main">
+
+    <!-- Mode Selector Toolbar -->
+    <nav class="mode-toolbar">
+      <div class="mode-pills">
+        <button class="mode-btn active" data-mode="lesson">📚 Guided Curriculum</button>
+        <button class="mode-btn" data-mode="timed">⏱️ Speed Test</button>
+        <button class="mode-btn" data-mode="words">📝 Word Sprint</button>
+        <button class="mode-btn" data-mode="weak">🎯 Weak Keys Workout</button>
+        <button class="mode-btn" data-mode="custom">✏️ Custom Text</button>
+      </div>
+
+      <!-- Timed Mode Sub-Options (Hidden by default) -->
+      <div id="timed-options" class="sub-options hidden">
+        <button class="sub-btn timed-btn" data-time="15">15s</button>
+        <button class="sub-btn timed-btn" data-time="30">30s</button>
+        <button class="sub-btn timed-btn active" data-time="60">60s</button>
+        <button class="sub-btn timed-btn" data-time="120">120s</button>
+      </div>
+
+      <!-- Word Mode Sub-Options (Hidden by default) -->
+      <div id="words-options" class="sub-options hidden">
+        <button class="sub-btn words-btn" data-count="10">10</button>
+        <button class="sub-btn words-btn" data-count="25">25</button>
+        <button class="sub-btn words-btn active" data-count="50">50</button>
+        <button class="sub-btn words-btn" data-count="100">100</button>
+      </div>
+
+      <!-- Visual Viewport Toggles -->
+      <div class="view-toggles">
+        <button id="toggle-hands-btn" class="icon-btn active" title="Toggle Visual Hands">
+          <span>🖐️</span> Hands
+        </button>
+        <button id="toggle-keyboard-btn" class="icon-btn active" title="Toggle Virtual Keyboard">
+          <span>⌨️</span> Keyboard
+        </button>
+        <button id="toggle-heatmap-btn" class="icon-btn" title="Toggle Mistake Heatmap Overlay">
+          <span>🔥</span> Heatmap
+        </button>
+      </div>
+    </nav>
+
+    <!-- Lesson Instruction Banner (Visible in Curriculum mode) -->
+    <section id="lesson-info-banner" class="lesson-banner">
+      <div class="lesson-info">
+        <h2 id="lesson-title" class="lesson-title">1.1 The Tactile Anchors: F and J</h2>
+        <p id="lesson-desc" class="lesson-desc">Place your left index finger on F and right index finger on J. Feel the bumps!</p>
+      </div>
+      <div id="lesson-target" class="lesson-target-badge">
+        Target: <strong>15 WPM</strong> | Min Accuracy: <strong>95%</strong>
+      </div>
+    </section>
+
+    <!-- Live Telemetry Dashboard -->
+    <section class="telemetry-bar">
+      <div class="meter-card meter-wpm">
+        <span class="meter-label">Live WPM</span>
+        <span id="live-wpm" class="meter-value">0</span>
+      </div>
+
+      <div class="meter-card">
+        <span class="meter-label">Accuracy</span>
+        <span id="live-acc" class="meter-value">100%</span>
+      </div>
+
+      <div class="meter-card">
+        <span class="meter-label">Time</span>
+        <span id="live-time" class="meter-value">0s</span>
+      </div>
+
+      <div class="meter-card">
+        <span class="meter-label">Consistency</span>
+        <span id="live-consistency" class="meter-value">100%</span>
+      </div>
+
+      <div class="meter-restart">
+        <button id="restart-btn" class="restart-action-btn" title="Restart Session (Tab)">
+          ↺
+        </button>
+      </div>
+    </section>
+
+    <!-- Session Progress Bar -->
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Active Typing Viewport -->
+    <section id="typing-viewport" class="typing-viewport">
+      <div id="caret" class="caret"></div>
+      <div id="text-display" class="text-display"></div>
+    </section>
+
+    <!-- Anatomical Hand Guide View -->
+    <section id="hands-view" class="hands-container"></section>
+
+    <!-- Virtual ANSI Keyboard View -->
+    <section id="keyboard-view"></section>
+
+    <!-- Curriculum Roadmap Drawer -->
+    <section id="curriculum-drawer" class="curriculum-drawer">
+      <div class="curriculum-drawer-header">
+        <h2 class="curriculum-drawer-title">Professional Touch Typing Progression</h2>
+        <span class="text-muted" style="font-size: 0.85rem;">Click any lesson to start</span>
+      </div>
+      <div id="curriculum-list"></div>
+    </section>
+
+  </main>
+
+  <!-- ==================== Modals ==================== -->
+
+  <!-- 1. End-of-Test Comprehensive Analytics Modal -->
+  <div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Session Complete!</h3>
+        <button id="modal-close-btn" class="modal-close-icon">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Hero Scorecard -->
+        <div class="results-hero">
+          <div class="results-hero-left">
+            <span id="modal-final-wpm" class="results-wpm-num">0</span>
+            <span class="results-wpm-label">Net Words Per Minute</span>
+          </div>
+          <div id="modal-tier" class="tier-badge">🐣 Novice</div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="results-grid">
+          <div class="res-card">
+            <div class="res-label">Raw Speed</div>
+            <div id="modal-raw-wpm" class="res-val">0</div>
+          </div>
+          <div class="res-card">
+            <div class="res-label">Accuracy</div>
+            <div id="modal-accuracy" class="res-val">100%</div>
+          </div>
+          <div class="res-card">
+            <div class="res-label">Consistency</div>
+            <div id="modal-consistency" class="res-val">100%</div>
+          </div>
+          <div class="res-card">
+            <div class="res-label">Keystrokes</div>
+            <div id="modal-chars" class="res-val">0/0</div>
+          </div>
+        </div>
+
+        <!-- Canvas Velocity Graph -->
+        <div class="chart-container">
+          <canvas id="results-chart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Weak Keys Intelligence -->
+        <div id="modal-weak-container" class="modal-weak-container">
+          <div class="weak-header">⚠️ Weak Keys Detected:</div>
+          <div id="modal-weak-keys" class="weak-chips-list"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="modal-retry-btn" class="modal-btn">Retry (Tab)</button>
+        <button id="modal-weak-drill-btn" class="modal-btn accent">Practice Weak Keys</button>
+        <button id="modal-next-btn" class="modal-btn primary">Next Lesson ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Custom Text Entry Modal -->
+  <div id="custom-text-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Custom Practice Text</h3>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Paste any article, literature excerpt, or code snippet you want to practice:</p>
+        <textarea id="custom-text-input" class="custom-textarea" placeholder="Paste your text here..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="custom-modal-cancel" class="modal-btn">Cancel</button>
+        <button id="custom-modal-start" class="modal-btn primary">Start Practice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Professional Touch Typing Guide Modal -->
+  <div id="tips-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">How Professionals Type: The 5 Golden Rules</h3>
+        <button id="tips-modal-close" class="modal-close-icon">&times;</button>
+      </div>
+      <div class="modal-body guide-article">
+        <div class="guide-rule-card">
+          <h3>Rule 1: Never, Ever Look Down</h3>
+          <p>The instant you look down at your keyboard, you break muscle memory formation. Rely completely on the raised physical bumps on <strong>F</strong> and <strong>J</strong> to position your index fingers without looking.</p>
+        </div>
+
+        <div class="guide-rule-card">
+          <h3>Rule 2: Respect Strict Finger Boundaries</h3>
+          <p>Every single key on the keyboard belongs to exactly one finger. Use the pinky for outer modifiers (Shift, Caps, Enter) and never reach across with the wrong hand or finger.</p>
+        </div>
+
+        <div class="guide-rule-card">
+          <h3>Rule 3: Master the Opposite Shift Key</h3>
+          <p>When typing a capital letter with your left hand, hold the <strong>Right Shift</strong> with your right pinky. When typing a capital letter with your right hand, hold the <strong>Left Shift</strong> with your left pinky. Never contort one hand to hold Shift and hit the letter simultaneously!</p>
+        </div>
+
+        <div class="guide-rule-card">
+          <h3>Rule 4: Rhythm Over Raw Speed</h3>
+          <p>Professional typists do not burst fast and stall on hard words; they type with a metronome-like cadence. Aim for <strong>97%+ accuracy</strong> first. Speed is a natural byproduct of accuracy, never the other way around.</p>
+        </div>
+
+        <div class="guide-rule-card">
+          <h3>Rule 5: Ergonomics & Float Your Wrists</h3>
+          <p>Keep your wrists straight and slightly floating, not anchored heavily into the desk edge. Keep your elbows at roughly 90 degrees and shoulders relaxed.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="document.getElementById('tips-modal').classList.add('hidden')" class="modal-btn primary">Got It, Let's Type!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standalone Zero-Dependency App (100% offline & file:// compatible) -->
+  <script src="js/app.bundle.js"></script>
+</body>
+</html>

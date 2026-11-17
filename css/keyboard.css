@@ -1,0 +1,184 @@
+/* ==========================================================================
+   Virtual Keyboard Styles
+   Anatomical Finger Assignments, Tactile Bumps, Active Glow & Heatmap
+   ========================================================================== */
+
+.keyboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  max-width: 980px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.kb-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* Individual Key Base */
+.kb-key {
+  position: relative;
+  background-color: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 6px;
+  height: 48px;
+  min-width: 44px;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--key-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.08s ease, background-color 0.1s ease, box-shadow 0.08s ease, border-color 0.1s ease;
+  cursor: default;
+}
+
+/* Key Width Classes */
+.w-tab { min-width: 68px; }
+.w-backspace { min-width: 82px; }
+.w-caps { min-width: 80px; }
+.w-enter { min-width: 90px; }
+.w-shift-left { min-width: 102px; }
+.w-shift-right { min-width: 110px; }
+.w-space { min-width: 290px; }
+.w-mod { min-width: 58px; }
+.w-backslash { min-width: 58px; }
+
+/* Key Text Elements */
+.key-shift-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  line-height: 1;
+}
+
+.key-main-label {
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* Tactile bumps on F and J */
+.kb-key.has-bump {
+  position: relative;
+}
+
+.home-bump {
+  position: absolute;
+  bottom: 6px;
+  width: 14px;
+  height: 2px;
+  background-color: var(--accent-primary);
+  border-radius: 2px;
+  box-shadow: 0 0 4px var(--accent-primary);
+}
+
+/* Finger Dot Accents */
+.finger-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.hide-finger-colors .finger-dot {
+  display: none;
+}
+
+/* Physical Keypress Effect */
+.kb-key.pressed {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-active);
+  filter: brightness(1.25);
+}
+
+/* Target Key Active Glow */
+.kb-key.target-active {
+  border-color: #ffffff;
+  box-shadow: 0 0 16px var(--accent-glow), 0 3px 0 rgba(0, 0, 0, 0.4);
+  animation: keyGlow 1.2s infinite alternate;
+  z-index: 2;
+}
+
+/* Opposite Shift Active Glow */
+.kb-key.shift-target-active {
+  border-color: #ec4899 !important;
+  background-color: rgba(236, 72, 153, 0.2) !important;
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.6), 0 3px 0 rgba(0, 0, 0, 0.4);
+  animation: shiftGlow 1s infinite alternate;
+  z-index: 2;
+}
+
+@keyframes keyGlow {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  100% {
+    filter: brightness(1.35);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes shiftGlow {
+  0% {
+    border-color: #ec4899;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.4);
+  }
+  100% {
+    border-color: #f43f5e;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.8);
+  }
+}
+
+/* Finger Accent Coloring on borders */
+.finger-left-pinky { border-bottom: 2px solid var(--finger-left-pinky); }
+.finger-left-ring { border-bottom: 2px solid var(--finger-left-ring); }
+.finger-left-middle { border-bottom: 2px solid var(--finger-left-middle); }
+.finger-left-index { border-bottom: 2px solid var(--finger-left-index); }
+.finger-thumb { border-bottom: 2px solid var(--finger-thumb); }
+.finger-right-index { border-bottom: 2px solid var(--finger-right-index); }
+.finger-right-middle { border-bottom: 2px solid var(--finger-right-middle); }
+.finger-right-ring { border-bottom: 2px solid var(--finger-right-ring); }
+.finger-right-pinky { border-bottom: 2px solid var(--finger-right-pinky); }
+
+.hide-finger-colors .kb-key {
+  border-bottom: 1px solid var(--key-border);
+}
+
+/* Heatmap Active Overlay */
+.kb-key.heatmap-active {
+  background-color: rgba(244, 63, 94, calc(var(--heat-intensity) * 0.8)) !important;
+  border-color: rgba(244, 63, 94, 0.8) !important;
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .keyboard-container {
+    padding: 0.75rem 0.5rem;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .kb-key {
+    height: 40px;
+    min-width: 32px;
+    font-size: 0.72rem;
+    padding: 2px 4px;
+  }
+  .w-space { min-width: 180px; }
+  .w-shift-left, .w-shift-right { min-width: 70px; }
+}
